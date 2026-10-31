@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#17131e" />
+  <meta name="description" content="A little birthday corner made with love for Christabel." />
+  <title>For Christabel — My World</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+    :root {
+      --ink: #211a27;
+      --night: #17131e;
+      --night-2: #241c2b;
+      --plum: #69485f;
+      --rose: #e9b8c8;
+      --rose-light: #f8e7eb;
+      --cream: #fffaf5;
+      --gold: #d8b879;
+      --muted: #a99da9;
+      --white: #fffdfb;
+      --shadow: 0 24px 70px rgba(10, 7, 15, .23);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .serif { font-family: 'Playfair Display', Georgia, serif; }
+    .hidden { display: none !important; }
+
+    /* Password entrance */
+    .gate {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      position: relative;
+      padding: 28px 18px;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(181, 119, 151, .23), transparent 32%),
+        radial-gradient(circle at 85% 80%, rgba(216, 184, 121, .15), transparent 28%),
+        linear-gradient(145deg, #15111b, #2a2030 58%, #1a1420);
+    }
+    .gate::before, .gate::after {
+      content: '';
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .gate::before { top: -210px; right: -100px; }
+    .gate::after { bottom: -240px; left: -80px; width: 480px; height: 480px; }
+    .gate-card {
+      width: min(100%, 470px);
+      text-align: center;
+      padding: 48px 34px 42px;
+      position: relative;
+      z-index: 1;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 28px;
+      background: rgba(255,255,255,.055);
+      box-shadow: 0 30px 100px rgba(0,0,0,.25);
+      backdrop-filter: blur(16px);
+    }
+    .gate-flower { font-size: 28px; color: var(--gold); margin-bottom: 17px; }
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: .24em;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .gate h1 {
+      font: 600 clamp(42px, 9vw, 60px)/1.05 'Playfair Display', Georgia, serif;
+      margin: 17px 0 13px;
+      letter-spacing: -.035em;
+    }
+    .gate-copy { color: #d8cdd8; font-size: 14px; line-height: 1.8; margin: 0 auto 28px; max-width: 310px; }
+    .lock-icon {
+      width: 54px; height: 54px; margin: 0 auto 22px; display: grid; place-items: center;
+      border: 1px solid rgba(216,184,121,.4); border-radius: 50%; color: var(--gold); font-size: 21px;
+    }
+    .password-wrap { display: flex; gap: 9px; max-width: 350px; margin: auto; }
+    .password-wrap input {
+      min-width: 0; flex: 1; border: 1px solid rgba(255,255,255,.18); outline: none;
+      color: white; background: rgba(255,255,255,.08); border-radius: 999px; padding: 14px 18px;
+      transition: border .2s, background .2s;
+    }
+    .password-wrap input::placeholder { color: #bcb0bf; }
+    .password-wrap input:focus { border-color: var(--gold); background: rgba(255,255,255,.12); }
+    .unlock-btn, .primary-btn {
+      border: 0; border-radius: 999px; padding: 14px 21px; font-weight: 700;
+      color: #2a1e27; background: linear-gradient(120deg, #f0d3d6, #d8b879);
+      box-shadow: 0 8px 25px rgba(216,184,121,.17); transition: transform .2s, box-shadow .2s;
+    }
+    .unlock-btn:hover, .primary-btn:hover { transform: translateY(-2px); box-shadow: 0 13px 30px rgba(216,184,121,.25); }
+    .gate-error { min-height: 20px; color: #ffc6d2; font-size: 12px; margin: 13px 0 0; }
+    .gate-foot { margin-top: 28px; color: #8f8292; font-size: 11px; letter-spacing: .08em; }
+    .sparkle { position: absolute; color: rgba(255,255,255,.45); animation: twinkle 3.5s ease-in-out infinite; }
+    .sparkle.s1 { left: 12%; top: 20%; }
+    .sparkle.s2 { right: 14%; top: 29%; animation-delay: 1s; }
+    .sparkle.s3 { left: 19%; bottom: 19%; animation-delay: 1.8s; }
+    @keyframes twinkle { 0%,100% { opacity: .25; transform: scale(.8); } 50% { opacity: .9; transform: scale(1.2); } }
+
+    /* Main page */
+    #birthdaySite { overflow: hidden; }
+    .topbar {
+      position: absolute; z-index: 5; top: 0; left: 0; width: 100%; padding: 22px clamp(20px, 6vw, 76px);
+      display: flex; justify-content: space-between; align-items: center; color: white;
+    }
+    .brand { font: 600 19px 'Playfair Display', Georgia, serif; letter-spacing: .02em; }
+    .brand span { color: var(--rose); }
+    .topbar a { color: rgba(255,255,255,.8); text-decoration: none; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
+    .hero {
+      min-height: 760px; min-height: 100svh; padding: 130px 22px 90px; position: relative; display: grid; place-items: center;
+      text-align: center; color: white; isolation: isolate;
+      background:
+        radial-gradient(ellipse at 50% 80%, rgba(112,68,95,.35), transparent 47%),
+        radial-gradient(circle at 82% 15%, rgba(216,184,121,.12), transparent 22%),
+        linear-gradient(145deg, #17131e, #2a2030 56%, #1a1420);
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0; z-index: -1; opacity: .22;
+      background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 62px 62px;
+      mask-image: linear-gradient(to bottom, black, transparent 88%);
+    }
+    .hero-content { max-width: 850px; margin: auto; }
+    .hero-kicker { color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: .34em; font-weight: 700; }
+    .hero h1 { font: 600 clamp(60px, 12vw, 118px)/.98 'Playfair Display', Georgia, serif; margin: 24px 0 22px; letter-spacing: -.055em; }
+    .hero h1 em { color: var(--rose); font-style: normal; }
+    .hero-sub { max-width: 540px; margin: 0 auto; color: #d8ced9; font-size: clamp(14px, 2vw, 17px); line-height: 1.9; }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 35px; }
+    .ghost-btn { border: 1px solid rgba(255,255,255,.27); border-radius: 999px; padding: 13px 22px; color: white; text-decoration: none; font-size: 13px; transition: .2s; }
+    .ghost-btn:hover { border-color: var(--rose); color: var(--rose); transform: translateY(-2px); }
+    .hero-note { color: #a99baa; margin-top: 58px; font-size: 10px; text-transform: uppercase; letter-spacing: .23em; }
+    .orbit-heart { position: absolute; color: rgba(233,184,200,.7); font-size: 22px; animation: drift 6s ease-in-out infinite; }
+    .orbit-heart.h1 { left: 14%; top: 35%; }
+    .orbit-heart.h2 { right: 15%; top: 26%; animation-delay: 1.2s; font-size: 15px; }
+    .orbit-heart.h3 { right: 23%; bottom: 19%; animation-delay: 2.2s; font-size: 18px; }
+    @keyframes drift { 0%,100% { transform: translateY(0) rotate(-8deg); } 50% { transform: translateY(-15px) rotate(8deg); } }
+
+    .section { padding: 105px 22px; }
+    .section-inner { width: min(100%, 1080px); margin: auto; }
+    .section-label { color: #a16d83; text-transform: uppercase; font-weight: 700; letter-spacing: .22em; font-size: 10px; }
+    .section-title { color: var(--ink); font: 600 clamp(35px, 6vw, 58px)/1.1 'Playfair Display', Georgia, serif; letter-spacing: -.035em; margin: 14px 0 18px; }
+    .section-intro { color: #716875; max-width: 620px; line-height: 1.9; font-size: 14px; }
+    .letter-section { background: var(--cream); }
+    .letter-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(35px, 8vw, 95px); align-items: center; }
+    .letter-art {
+      min-height: 420px; border-radius: 220px 220px 18px 18px; position: relative; overflow: hidden;
+      display: grid; place-items: center; background:
+       radial-gradient(circle at 50% 35%, rgba(255,255,255,.56), transparent 30%),
+       linear-gradient(150deg, #eed6dc, #c995aa 55%, #76546b);
+      box-shadow: var(--shadow);
+    }
+    .letter-art::before { content: ''; position: absolute; width: 260px; height: 260px; border: 1px solid rgba(255,255,255,.5); border-radius: 50%; }
+    .letter-art::after { content: 'C'; position: relative; color: rgba(255,255,255,.88); font: 500 145px 'Playfair Display', Georgia, serif; text-shadow: 0 8px 35px rgba(71,40,60,.15); }
+    .art-caption { position: absolute; bottom: 28px; color: rgba(255,255,255,.85); font: italic 15px 'Playfair Display', Georgia, serif; letter-spacing: .08em; }
+    .letter-copy p { color: #6d6470; line-height: 2; font-size: 14px; margin: 0 0 17px; }
+    .letter-copy .salutation { font: 600 25px 'Playfair Display', Georgia, serif; color: var(--plum); margin-bottom: 19px; }
+    .signature { color: var(--plum) !important; font: italic 24px 'Playfair Display', Georgia, serif !important; margin-top: 24px !important; }
+    .little-line { width: 58px; height: 2px; background: var(--gold); margin: 25px 0; }
+
+    .qualities { background: #f4e9e9; }
+    .qualities-head { text-align: center; max-width: 620px; margin: 0 auto 48px; }
+    .qualities-head .section-intro { margin: auto; }
+    .quality-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; }
+    .quality-card { background: rgba(255,255,255,.72); border: 1px solid rgba(110,72,95,.08); padding: 30px 24px; border-radius: 17px; min-height: 190px; transition: transform .25s, box-shadow .25s; }
+    .quality-card:hover { transform: translateY(-5px); box-shadow: 0 16px 35px rgba(58,35,53,.08); }
+    .quality-icon { color: #b27c91; font-size: 23px; }
+    .quality-card h3 { color: var(--ink); font: 600 22px 'Playfair Display', Georgia, serif; margin: 16px 0 9px; }
+    .quality-card p { color: #817581; font-size: 12px; line-height: 1.8; margin: 0; }
+
+    .memories { background: var(--white); }
+    .memories-head { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 34px; }
+    .memory-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .memory-card { min-height: 245px; padding: 26px; border-radius: 16px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: end; background: linear-gradient(145deg, #e7c8d2, #9e7187); color: white; }
+    .memory-card:nth-child(2) { background: linear-gradient(145deg, #e5d8bf, #a78b67); }
+    .memory-card:nth-child(3) { background: linear-gradient(145deg, #c8bbcF, #76647f); }
+    .memory-card::before { content: '✦'; position: absolute; top: 17px; right: 22px; color: rgba(255,255,255,.6); font-size: 25px; }
+    .memory-number { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; opacity: .8; }
+    .memory-card h3 { font: 600 26px 'Playfair Display', Georgia, serif; margin: 8px 0; }
+    .memory-card p { font-size: 12px; line-height: 1.7; margin: 0; max-width: 260px; color: rgba(255,255,255,.86); }
+
+    .video-section { background: #1d1723; color: white; }
+    .video-section .section-title { color: white; }
+    .video-section .section-intro { color: #bdb1c0; }
+    .video-head { display: flex; justify-content: space-between; align-items: end; gap: 25px; margin-bottom: 36px; }
+    .video-head .section-label { color: var(--gold); }
+    .video-controls { display: flex; gap: 10px; flex-wrap: wrap; }
+    .outline-light { border: 1px solid rgba(255,255,255,.3); color: white; background: transparent; padding: 12px 17px; border-radius: 999px; font-size: 12px; transition: .2s; }
+    .outline-light:hover { border-color: var(--rose); color: var(--rose); }
+    .video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; }
+    .video-card { background: #2b2231; border: 1px solid rgba(255,255,255,.08); border-radius: 15px; overflow: hidden; }
+    .video-card video { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; background: #110d15; }
+    .video-meta { padding: 15px 17px 18px; }
+    .video-meta h3 { font: 600 18px 'Playfair Display', Georgia, serif; margin: 0 0 5px; }
+    .video-meta p { color: #b5a9b8; font-size: 11px; margin: 0; }
+    .empty-videos { grid-column: 1/-1; border: 1px dashed rgba(255,255,255,.2); border-radius: 16px; padding: 45px 20px; text-align: center; color: #c8bdca; }
+    .empty-videos strong { display: block; color: white; font: 600 25px 'Playfair Display', Georgia, serif; margin-bottom: 9px; }
+    .empty-videos p { max-width: 480px; margin: 0 auto; line-height: 1.8; font-size: 12px; }
+    .video-help { margin-top: 22px; color: #a99dac; font-size: 11px; line-height: 1.8; }
+    .video-help code { color: #f0cbd7; background: rgba(255,255,255,.08); padding: 3px 6px; border-radius: 5px; }
+
+    .closing { padding: 105px 22px; text-align: center; color: white; background: linear-gradient(135deg, #865e75, #39283e 75%); position: relative; overflow: hidden; }
+    .closing::before { content: '♡'; position: absolute; font-size: 350px; color: rgba(255,255,255,.035); left: 50%; top: 50%; transform: translate(-50%,-55%); line-height: 1; }
+    .closing-inner { position: relative; max-width: 720px; margin: auto; }
+    .closing .section-label { color: #f0d7bd; }
+    .closing h2 { font: 600 clamp(42px, 7vw, 70px)/1.04 'Playfair Display', Georgia, serif; margin: 20px 0; }
+    .closing p { color: #e9dce6; font-size: 14px; line-height: 1.9; max-width: 550px; margin: 0 auto 27px; }
+    .heart-button { border: 1px solid rgba(255,255,255,.38); background: rgba(255,255,255,.1); color: white; width: 55px; height: 55px; border-radius: 50%; font-size: 23px; transition: transform .2s, background .2s; }
+    .heart-button:hover { transform: scale(1.1); background: rgba(255,255,255,.2); }
+    footer { background: #17131e; color: #8f8392; text-align: center; padding: 22px; font-size: 10px; letter-spacing: .08em; }
+    footer span { color: var(--rose); }
+
+    .toast { position: fixed; z-index: 20; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; background: #fffaf5; color: #39283e; border-radius: 999px; padding: 12px 18px; font-size: 12px; box-shadow: var(--shadow); transition: .3s; white-space: nowrap; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .confetti { position: fixed; z-index: 30; top: -15px; width: 8px; height: 13px; pointer-events: none; animation: fall linear forwards; }
+    @keyframes fall { to { transform: translateY(110vh) rotate(760deg); opacity: .2; } }
+    .fade-up { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 760px) {
+      .gate-card { padding: 42px 21px 34px; }
+      .password-wrap { flex-direction: column; }
+      .unlock-btn { width: 100%; }
+      .topbar { padding: 18px 20px; }
+      .topbar a { font-size: 10px; }
+      .hero { min-height: 760px; }
+      .orbit-heart.h1 { left: 7%; top: 22%; }
+      .orbit-heart.h2 { right: 7%; top: 19%; }
+      .orbit-heart.h3 { right: 9%; bottom: 15%; }
+      .section { padding: 76px 20px; }
+      .letter-grid { grid-template-columns: 1fr; }
+      .letter-art { min-height: 310px; width: min(100%, 380px); margin: auto; }
+      .letter-art::after { font-size: 115px; }
+      .quality-grid, .memory-grid, .video-grid { grid-template-columns: 1fr; }
+      .quality-card { min-height: 0; }
+      .memory-card { min-height: 210px; }
+      .memories-head, .video-head { align-items: start; flex-direction: column; }
+      .video-controls { width: 100%; }
+      .video-controls button { flex: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .fade-up { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- PASSWORD SCREEN: This is a sweet entrance screen, not secure private hosting. -->
+  <section class="gate" id="passwordGate" aria-label="Password entrance">
+    <span class="sparkle s1">✦</span><span class="sparkle s2">✧</span><span class="sparkle s3">✦</span>
+    <div class="gate-card">
+      <div class="gate-flower">✿</div>
+      <div class="eyebrow">A little place made just for you</div>
+      <h1 class="serif">Hey, Christabel.</h1>
+      <p class="gate-copy">Some people make ordinary days feel special. This little corner is for one of them.</p>
+      <div class="lock-icon" aria-hidden="true">♡</div>
+      <form id="passwordForm" autocomplete="off">
+        <div class="password-wrap">
+          <input id="passwordInput" type="password" placeholder="Enter the secret password" aria-label="Secret password" required />
+          <button class="unlock-btn" type="submit">Open your surprise&nbsp; ✨</button>
+        </div>
+        <p class="gate-error" id="passwordError" role="status" aria-live="polite"></p>
+      </form>
+      <div class="gate-foot">MADE WITH A WHOLE LOT OF APPRECIATION</div>
+    </div>
+  </section>
+
+  <main id="birthdaySite" class="hidden">
+    <nav class="topbar">
+      <div class="brand">for <span>Christabel</span> ♡</div>
+      <a href="#letter">A little note ↓</a>
+    </nav>
+
+    <header class="hero" id="home">
+      <span class="orbit-heart h1">♡</span><span class="orbit-heart h2">✧</span><span class="orbit-heart h3">♡</span>
+      <div class="hero-content fade-up">
+        <div class="hero-kicker">Today, the spotlight is yours</div>
+        <h1>Happy Birthday,<br /><em>Queenie.</em></h1>
+        <p class="hero-sub">To my favourite person, my best friend, my personal person — may this new chapter be as beautiful as the kindness and light you bring into the lives around you.</p>
+        <div class="hero-actions">
+          <a class="primary-btn" href="#letter" style="text-decoration:none;">Read your little letter&nbsp; ♡</a>
+          <a class="ghost-btn" href="#videos">Visit our memory lane</a>
+        </div>
+        <div class="hero-note">A small website for a very special human</div>
+      </div>
+    </header>
+
+    <section class="section letter-section" id="letter">
+      <div class="section-inner letter-grid">
+        <div class="letter-art fade-up" aria-label="A decorative letter C">
+          <div class="art-caption">to my favourite human</div>
+        </div>
+        <article class="letter-copy fade-up">
+          <div class="section-label">A note from the heart</div>
+          <h2 class="section-title">Dear Christabel,</h2>
+          <div class="little-line"></div>
+          <p class="salutation">My Queenie, my person. ♡</p>
+          <p>Happy birthday to someone who means so much to me. I hope you know how genuinely appreciated you are. Your presence, your heart, your little ways of making moments brighter — they matter more than you probably realise.</p>
+          <p>Thank you for being my best friend, for being someone I can call my personal person, and for adding your own kind of magic to this journey. I may not always have the perfect words, but I will never run out of reasons to be grateful that life brought a person like you into my world.</p>
+          <p>As you step into another year, I pray it brings you peace that stays, laughter that comes easily, opportunities that find you, and people who celebrate you sincerely. May the things you quietly wish for meet you at the right time. Keep being wonderfully, unapologetically you.</p>
+          <p>Today and always, I hope you feel loved, valued, seen, and celebrated. You deserve all the beautiful things life has to offer.</p>
+          <p class="signature">Always cheering for you, ♡<br />Deyshine</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section qualities">
+      <div class="section-inner">
+        <div class="qualities-head fade-up">
+          <div class="section-label">A few things worth celebrating</div>
+          <h2 class="section-title">What makes you, you.</h2>
+          <p class="section-intro">A little reminder that the best parts of you are not measured by one day. They show up in the way you live, care, laugh, and make a difference.</p>
+        </div>
+        <div class="quality-grid">
+          <article class="quality-card fade-up"><div class="quality-icon">✧</div><h3>Your kind heart</h3><p>The little things you do can mean more than you know. Never underestimate the good you bring.</p></article>
+          <article class="quality-card fade-up"><div class="quality-icon">♡</div><h3>Your presence</h3><p>You have a way of making a moment feel lighter just by being part of it.</p></article>
+          <article class="quality-card fade-up"><div class="quality-icon">☼</div><h3>Your strength</h3><p>Through every season, I hope you remember how capable, worthy, and remarkable you are.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section memories" id="memories">
+      <div class="section-inner">
+        <div class="memories-head fade-up">
+          <div>
+            <div class="section-label">The little things become the big things</div>
+            <h2 class="section-title">Our memory lane.</h2>
+            <p class="section-intro">Every friendship has its own collection of moments. These are little placeholders for the memories that deserve a permanent spot here.</p>
+          </div>
+        </div>
+        <div class="memory-grid">
+          <article class="memory-card fade-up"><div class="memory-number">Chapter 01</div><h3>The laughs</h3><p>For the random conversations, silly moments, and laughter that made the day better.</p></article>
+          <article class="memory-card fade-up"><div class="memory-number">Chapter 02</div><h3>The little wins</h3><p>For every milestone, every brave step, and every reason to say “I'm proud of you.”</p></article>
+          <article class="memory-card fade-up"><div class="memory-number">Chapter 03</div><h3>The forever memories</h3><p>For the moments we will look back on and smile about all over again.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section video-section" id="videos">
+      <div class="section-inner">
+        <div class="video-head fade-up">
+          <div>
+            <div class="section-label">Press play, keep the memories</div>
+            <h2 class="section-title">Little moments, on replay.</h2>
+            <p class="section-intro">A special shelf for your videos. Add your favourite clips and let this page keep a little piece of the memories.</p>
+          </div>
+          <div class="video-controls">
+            <button class="outline-light" id="pickVideosBtn" type="button">＋ Preview videos</button>
+            <button class="outline-light" id="celebrateBtn" type="button">Send some confetti ✨</button>
+          </div>
+        </div>
+        <input id="videoPicker" type="file" accept="video/*" multiple hidden />
+        <div class="video-grid" id="videoGrid" aria-live="polite">
+          <div class="empty-videos" id="emptyVideos">
+            <strong>Your video memories go here.</strong>
+            <p>Drop video files into the <code>videos</code> folder, then add their filenames to the <code>VIDEO_FILES</code> list in <code>index.html</code>. You can also use “Preview videos” to test clips from your device.</p>
+          </div>
+        </div>
+        <p class="video-help">Accepted formats depend on the browser, but MP4 (H.264) is usually the safest choice. Files selected with “Preview videos” are temporary previews; add files to the project folder to publish them with the website.</p>
+      </div>
+    </section>
+
+    <section class="closing">
+      <div class="closing-inner fade-up">
+        <div class="section-label">One last thing</div>
+        <h2>Keep shining,<br />my favourite human.</h2>
+        <p>May this year be gentle with your heart and generous with your dreams. Whatever this new chapter holds, I hope you never forget that you are appreciated — today, tomorrow, and beyond.</p>
+        <button class="heart-button" id="heartButton" type="button" aria-label="Send a heart">♡</button>
+      </div>
+    </section>
+    <footer>MADE FOR CHRISTABEL <span>♡</span> WITH APPRECIATION BY DEYSHINE</footer>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite">A little love sent your way ♡</div>
+
+  <script>
+    // PASSWORD: This is a front-end surprise gate, not real security. See README.md.
+    const SITE_PASSWORD = 'My world';
+
+    // Add each video filename here after placing the file inside the /videos folder.
+    // Example: { file: 'christabel-laughing.mp4', title: 'That laugh', note: 'A moment worth keeping.' }
+    const VIDEO_FILES = [
+      // { file: 'clip-01.mp4', title: 'A favourite moment', note: 'One for the memory books.' },
+    ];
+
+    const gate = document.getElementById('passwordGate');
+    const site = document.getElementById('birthdaySite');
+    const form = document.getElementById('passwordForm');
+    const passwordInput = document.getElementById('passwordInput');
+    const passwordError = document.getElementById('passwordError');
+
+    function unlockSite() {
+      gate.classList.add('hidden');
+      site.classList.remove('hidden');
+      document.body.style.background = '#fffaf5';
+      window.scrollTo(0, 0);
+      setTimeout(() => document.querySelectorAll('.hero-content').forEach(el => el.classList.add('visible')), 80);
+      renderProjectVideos();
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (passwordInput.value === SITE_PASSWORD) {
+        passwordError.textContent = '';
+        unlockSite();
+      } else {
+        passwordError.textContent = 'That is not quite it — try the secret again. ♡';
+        passwordInput.value = '';
+        passwordInput.focus();
+      }
+    });
+
+    function createVideoCard(src, title, note, temporary = false) {
+      const card = document.createElement('article');
+      card.className = 'video-card';
+      const video = document.createElement('video');
+      video.controls = true;
+      video.preload = 'metadata';
+      video.playsInline = true;
+      video.src = src;
+      const meta = document.createElement('div');
+      meta.className = 'video-meta';
+      const heading = document.createElement('h3');
+      heading.textContent = title;
+      const description = document.createElement('p');
+      description.textContent = note || (temporary ? 'Temporary preview from this device' : 'A memory to keep close');
+      meta.append(heading, description);
+      card.append(video, meta);
+      return card;
+    }
+
+    function renderProjectVideos() {
+      const grid = document.getElementById('videoGrid');
+      const empty = document.getElementById('emptyVideos');
+      VIDEO_FILES.forEach(item => {
+        const path = 'videos/' + encodeURIComponent(item.file).replace(/%2F/g, '/');
+        grid.appendChild(createVideoCard(path, item.title || item.file, item.note || 'A memory to keep close'));
+      });
+      if (VIDEO_FILES.length) empty.classList.add('hidden');
+    }
+
+    document.getElementById('pickVideosBtn').addEventListener('click', () => document.getElementById('videoPicker').click());
+    document.getElementById('videoPicker').addEventListener('change', (event) => {
+      const files = Array.from(event.target.files || []).filter(file => file.type.startsWith('video/'));
+      if (!files.length) return;
+      const grid = document.getElementById('videoGrid');
+      document.getElementById('emptyVideos').classList.add('hidden');
+      files.forEach(file => {
+        const url = URL.createObjectURL(file);
+        grid.appendChild(createVideoCard(url, file.name.replace(/\.[^.]+$/, ''), 'Temporary preview — add this file to /videos to publish it.', true));
+      });
+      showToast(files.length === 1 ? 'Your video preview is ready ♡' : files.length + ' video previews are ready ♡');
+      event.target.value = '';
+    });
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    function launchConfetti() {
+      const pieces = 85;
+      const symbols = ['♡', '✦', '✧'];
+      for (let i = 0; i < pieces; i++) {
+        const piece = document.createElement('span');
+        piece.className = 'confetti';
+        piece.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.color = ['#e9b8c8', '#d8b879', '#fff1e7', '#c69ab0'][Math.floor(Math.random() * 4)];
+        piece.style.fontSize = (10 + Math.random() * 12) + 'px';
+        piece.style.animationDuration = (3 + Math.random() * 3) + 's';
+        document.body.appendChild(piece);
+        window.setTimeout(() => piece.remove(), 6200);
+      }
+    }
+    document.getElementById('celebrateBtn').addEventListener('click', () => { launchConfetti(); showToast('A little celebration for you, Queenie! ✨'); });
+    document.getElementById('heartButton').addEventListener('click', () => { launchConfetti(); showToast('A whole lot of appreciation, just for you ♡'); });
+
+    // Gentle reveal-on-scroll effect.
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up:not(.hero-content)').forEach(el => revealObserver.observe(el));
+  </script>
+</body>
+</html>
